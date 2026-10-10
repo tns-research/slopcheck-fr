@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="648" viewBox="0 0 980 648" role="img" aria-label="slopcheck relève trois faux contrastes et un tiret cadratin dans un fil X écrit par GPT">
+<title>slopcheck sur un fil X généré par GPT-5.6</title>
+<rect width="980" height="648" rx="12" fill="#0f1117"/>
+<rect x="0.5" y="0.5" width="979" height="647" rx="12" fill="none" stroke="#2a3040"/>
+<circle cx="22" cy="22" r="6" fill="#ff5f57"/><circle cx="42" cy="22" r="6" fill="#febc2e"/><circle cx="62" cy="22" r="6" fill="#28c840"/>
+<text x="490.0" y="27" text-anchor="middle" fill="#8b93a7" font-family="ui-sans-serif, -apple-system, Segoe UI, sans-serif" font-size="13">slopcheck-fr</text>
+<line x1="0" y1="300" x2="980" y2="300" stroke="#2a3040"/>
+<g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', monospace" font-size="14" fill="#e6e8ee" xml:space="preserve" style="white-space:pre">
+<text x="28" y="64" fill="#8b93a7">fil-x.md · écrit par GPT-5.6</text>
+<text x="28" y="93" >1/5 Apprendre l'anglais en autodidacte, <tspan fill="#ff6b6b" font-weight="700" text-decoration="underline">ce n'est pas étudier 3 heures une fois par</tspan></text>
+<text x="28" y="114" ><tspan fill="#ff6b6b" font-weight="700" text-decoration="underline">semaine. C'est</tspan> pratiquer 20 minutes chaque jour. La régularité bat l'intensité. Toujours.</text>
+<text x="28" y="135" ></text>
+<text x="28" y="156" >3/5 Apprends des phrases<tspan fill="#ff6b6b" font-weight="700" text-decoration="underline">, pas des listes de vocabulaire.</tspan> Au lieu de mémoriser</text>
+<text x="28" y="177" >« although », retiens une phrase complète qui l'utilise.</text>
+<text x="28" y="198" ></text>
+<text x="28" y="219" >5/5 Mesure tes progrès chaque mois<tspan fill="#ff6b6b" font-weight="700" text-decoration="underline">, pas chaque jour.</tspan> Relis un ancien texte, réécoute</text>
+<text x="28" y="240" >une vidéo ou refais un exercice. Tu verras ce qui est devenu plus facile <tspan fill="#f5b84a" font-weight="700">—</tspan> et cette</text>
+<text x="28" y="261" >preuve concrète entretiendra ta motivation.</text>
+<text x="28" y="334" ><tspan fill="#5fd68a">$</tspan> slopcheck fil-x.md</text>
+<text x="28.0" y="361" ><tspan fill="#ff6b6b" font-weight="700">BLOCK</tspan><tspan fill="#8b93a7"> fil-x.md:1</tspan><tspan fill="#7cc4ff"> [correction-deux-temps]</tspan> « ce n'est pas étudier 3 heures une fois par semaine. C'est »</text>
+<text x="78.6" y="382" ><tspan fill="#5fd68a">-&gt; Dire directement ce qui est : « Apprendre l'anglais, c'est 20 minutes par jour ».</tspan></text>
+<text x="28.0" y="403" ><tspan fill="#ff6b6b" font-weight="700">BLOCK</tspan><tspan fill="#8b93a7"> fil-x.md:4</tspan><tspan fill="#7cc4ff"> [contraste-appose]</tspan> « , pas des listes de vocabulaire. »</text>
+<text x="78.6" y="424" ><tspan fill="#5fd68a">-&gt; Garder la bonne option seule. Si l'erreur est fréquente, la décrire dans une phrase à part.</tspan></text>
+<text x="103.9" y="445" ><tspan fill="#5fd68a">(x2 dans le texte : la tournure devient un réflexe)</tspan></text>
+<text x="28.0" y="466" ><tspan fill="#ff6b6b" font-weight="700">BLOCK</tspan><tspan fill="#8b93a7"> fil-x.md:7</tspan><tspan fill="#7cc4ff"> [contraste-appose]</tspan> « , pas chaque jour. »</text>
+<text x="78.6" y="487" ><tspan fill="#5fd68a">-&gt; Garder la bonne option seule. Si l'erreur est fréquente, la décrire dans une phrase à part.</tspan></text>
+<text x="103.9" y="508" ><tspan fill="#5fd68a">(x2 dans le texte : la tournure devient un réflexe)</tspan></text>
+<text x="28.0" y="529" ><tspan fill="#f5b84a" font-weight="700">WARN </tspan><tspan fill="#8b93a7"> fil-x.md:8</tspan><tspan fill="#7cc4ff"> [em-dash]</tspan> « i est devenu plus facile — et cette preuve concrète »</text>
+<text x="78.6" y="550" ><tspan fill="#5fd68a">-&gt; Virgule, parenthèses, deux-points ou point. Le tiret reste permis en tête de réplique de</tspan></text>
+<text x="103.9" y="571" ><tspan fill="#5fd68a">dialogue.</tspan></text>
+<text x="28.0" y="592" ></text>
+<text x="28.0" y="613" ><tspan font-weight="700">3 BLOCK, 1 WARN sur 84 mots</tspan></text>
+</g></svg>

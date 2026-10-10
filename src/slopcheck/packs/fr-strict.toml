@@ -1,0 +1,534 @@
+# Standard strict : en plus des signatures IA, ce pack interdit des tournures
+# que de bons auteurs humains emploient (voix passive, « pas X mais Y »,
+# « vraiment », règle de trois). Il vise une prose sèche et factuelle :
+# posts, emails, pages de vente, documentation. Sur le corpus humain de
+# référence, il lève environ un BLOCK pour 800 mots : c'est voulu.
+# Origine : règles de rédaction de swanbase (Paris), août-octobre 2026.
+
+[pack]
+name = "fr-strict"
+description = "Standard strict de prose factuelle, au-delà des signatures IA"
+extends = ["fr-signatures"]
+
+# ---------------------------------------------------------------- durcissements
+
+[[rule]]
+id = "em-dash"
+severity = "block"
+escalate_at = 0
+
+[[rule]]
+id = "etiquette-relative"
+severity = "block"
+
+[[rule]]
+id = "veritable"
+severity = "block"
+
+[[rule]]
+id = "non-seulement-mais"
+severity = "block"
+
+[[rule]]
+id = "participe-final"
+severity = "block"
+
+[[rule]]
+id = "autorite-vague"
+severity = "block"
+
+[[rule]]
+id = "intertitres-questions"
+severity = "block"
+
+[[rule]]
+id = "conclusion-rituelle"
+severity = "block"
+
+# ---------------------------------------------------------------- titres
+
+[[rule]]
+id = "ce-que-ce-qui"
+family = "titre"
+scope = "title"
+kinds = ["heading", "paragraph", "list"]
+severity = "block"
+pattern = '''^\W*Ce\s+(?:qui|que|qu['’]|dont)\b'''
+message = "Titre ou étiquette ouvert par « Ce que / Ce qui »."
+fix = "Nommer la chose au lieu de l'annoncer."
+bad = ["## Ce qui reste de votre côté"]
+good = ["## Vos tâches restantes"]
+
+# ---------------------------------------------------------------- correction en deux temps
+
+[[rule]]
+id = "pas-mais"
+family = "structure"
+scope = "sentence"
+severity = "block"
+pattern = '''^\W*Pas\s+\w[^,.]{0,40},\s*mais\b|\bnon pas\b[^.]{0,40}\bmais\b'''
+message = "« Pas X, mais Y » / « non pas X mais Y »."
+fix = "Affirmer Y directement."
+bad = ["Pas un outil, mais une méthode.", "Il vend non pas des logiciels mais du conseil."]
+good = ["Il vend du conseil."]
+
+[[rule]]
+id = "contraste-appose"
+severity = "block"
+
+[[rule]]
+id = "negation-trainante"
+family = "structure"
+severity = "block"
+pattern = '''\bne\s+\w+\s+pas\s+\w[^.!?]{0,50}\.\s*(?:Il|Elle|Ça|Ca)\s+\w+\b.{0,40}\bpas\b'''
+message = "Négation traînante : « X fait A. Il ne fait pas B. »"
+fix = "Garder l'affirmation, couper la négation."
+bad = ["Il ne vend pas de logiciel. Il ne fait pas non plus de conseil."]
+good = ["Il vend du conseil."]
+
+[[rule]]
+id = "setup-dramatique"
+family = "mise-en-scene"
+scope = "sentence"
+severity = "block"
+pattern = '''^\W*Si\s+[^,]{5,60},\s*c['’]est\s+(?:pour|parce)'''
+message = "Mise en scène « Si je vous écris, c'est pour... »"
+fix = "Dire la chose directement."
+bad = ["Si je reviens vers vous, c'est pour une raison simple."]
+good = ["Si vous venez, apportez votre deck."]
+
+# ---------------------------------------------------------------- intensificateurs
+
+[[rule]]
+id = "intensificateur-creux"
+family = "intensificateur"
+severity = "block"
+pattern = '''\b(?:un|une|d['’]un|d['’]une|le|la|les|de)\s+(?:vrai|vraie|vrais|vraies)\s+[a-zà-ÿ]|\btout à fait\b|\bde loin (?:le|la|les)\b|\bpas moins de\b|\bbel et bien\b|\blittéralement\b|\bincontournables?\b|\bau cœur de\b|\bsans plus attendre\b'''
+message = "Intensificateur creux posé à la place d'un fait."
+fix = "Écrire le chiffre, le nom ou le fait précis."
+bad = ["C'est un vrai chiffre à regarder.", "Une charge tout à fait banale.", "Un rendez-vous incontournable."]
+good = ["3 000 utilisateurs actifs en décembre."]
+
+[[rule]]
+id = "adverbe-creux"
+family = "intensificateur"
+severity = "warn"
+pattern = '''\b(?:vraiment|réellement|parfaitement|extrêmement|absolument|véritablement|pleinement|profondément|indéniablement|incontestablement)\b|\btrès (?:bien|bon|bonne|simple|efficace)\b'''
+message = "Adverbe d'insistance sans contenu."
+fix = "Supprimer le mot, ou le remplacer par la mesure."
+bad = ["C'est vraiment utile."]
+good = ["C'est utile : 2 heures gagnées par semaine."]
+
+[[rule]]
+id = "adjectif-evaluatif"
+family = "intensificateur"
+severity = "warn"
+pattern = '''\b(?:un|une|le|la|les)\s+[\wÀ-ÿ]+\s+(?:crucial|cruciale|essentiel|essentielle|clé|majeur|majeure)\b|\bgrand(?:e)? (?:atout|avantage|force)\b'''
+message = "Adjectif évaluatif à la place d'un fait."
+fix = "Dire en quoi : chiffre, conséquence, nom."
+bad = ["Un point crucial du contrat."]
+good = ["L'article 4 du contrat fixe la pénalité."]
+
+[[rule]]
+id = "apposition-demonstrative"
+family = "mise-en-scene"
+severity = "block"
+pattern = '''\b(?:la|le|un|une|second|seconde|deuxième|troisième|dernier|dernière)\s+[\wÀ-ÿ]+,\s*(?:celui|celle|ceux|celles)\s+(?:qui|que|qu['’]|dont)\b|\b(?:celui|celle|ceux|celles|le seul|la seule)\s+qui (?:compte|comptent|vaille|importe)\b|\bce qui compte (?:vraiment|le plus|réellement)\b'''
+message = "Annonce d'importance : « Deuxième sujet, celui qui compte »."
+fix = "Énoncer le sujet."
+bad = ["Deuxième sujet, celui qui compte.", "Ce qui compte vraiment, c'est la marge."]
+good = ["Deuxième sujet : la marge."]
+
+# ---------------------------------------------------------------- questions
+
+[[rule]]
+id = "question-rhetorique"
+family = "mise-en-scene"
+severity = "block"
+pattern = '''\?\s*(?:Parce qu|Réponse\s*:|Eh bien|Oui\.|Non\.|Simple\s*:)'''
+message = "Question posée pour amener sa propre réponse."
+fix = "Affirmer. Garder la question seulement si le lecteur se la pose."
+bad = ["Pourquoi ça marche ? Parce que le client paie d'avance."]
+good = ["Le client paie d'avance, ce qui finance le stock."]
+
+[[rule]]
+id = "question-reponse"
+family = "mise-en-scene"
+check = "question_reponse"
+severity = "warn"
+message = "Question suivie d'une réponse de quatre mots ou moins."
+fix = "Donner l'information sans la mettre en scène."
+bad = ["Le résultat de la levée ? Dévastateur."]
+good = ["La levée a échoué : 0 € sur 500 000 € visés."]
+
+# ---------------------------------------------------------------- phrase qui ne fait rien
+
+[[rule]]
+id = "verbe-faible"
+family = "phrase-faible"
+severity = "warn"
+escalate_at = 3
+pattern = '''\bsert de\b|\bfait office de\b|\bpossède (?:un|une|des|le|la|les)\b|\bconstitue (?:un|une|le|la)\b|\breprésente (?:un|une|le|la)\b|\bs['’]avère\b|\bse révèle\b|\bs['’]impose comme\b|\bse positionne comme\b|\bapparaît comme\b|\bjoue un rôle\b|\bse veut\b|\bdispose d(?:['’]un|['’]une|e nombreux)\b|\brevêt\b'''
+message = "Verbe de liaison qui ne fait rien arriver."
+fix = "Préférer « est » ou « a »."
+bad = ["Cette fonction sert de passerelle.\n\nLa ville possède une riche histoire.\n\nLe module constitue une base."]
+good = ["Cette fonction relie les deux bases."]
+
+[[rule]]
+id = "fausse-amplitude"
+family = "phrase-faible"
+severity = "block"
+pattern = '''\bde\s+(?:la\s+|l['’]|le\s+)?[\wÀ-ÿ]+\s+à\s+(?:la\s+|l['’]|le\s+)?[\wÀ-ÿ]+,?\s*(?:jusqu['’]à|en passant par|voire)\b|\bde\s+A\s+à\s+Z\b|\ben passant par\b|\bà tous les (?:niveaux|étages)\b'''
+message = "Balayage « de X à Y, en passant par Z »."
+fix = "Nommer les éléments réels, ou couper."
+bad = ["De la stratégie à l'exécution, jusqu'à la culture.", "On vous accompagne de A à Z."]
+good = ["Le train va de Paris à Lyon."]
+
+[[rule]]
+id = "empilement-precautions"
+family = "phrase-faible"
+check = "hedges"
+severity = "block"
+message = "Deux précautions dans la même phrase."
+fix = "Prendre position. Une seule nuance justifiée par texte."
+bad = ["Il semble que ce soit généralement le cas."]
+good = ["C'est le cas dans 8 dossiers sur 10."]
+
+[rule.params]
+min = 2
+hedges = [
+  "sans doute", "peut-être", "il semble", "il semblerait", "on pourrait", "dans une certaine mesure",
+  "généralement", "souvent", "parfois", "il convient", "notons que", "à noter que", "cela dit", "certes",
+  "toutefois", "néanmoins", "en quelque sorte", "relativement", "plus ou moins", "en général",
+  "la plupart du temps", "a priori", "potentiellement", "d['’]une certaine façon",
+]
+
+[[rule]]
+id = "voix-passive"
+family = "phrase-faible"
+check = "passive"
+severity = "warn"
+message = "Voix passive : celui qui agit disparaît de la phrase."
+fix = "Nommer qui fait l'action : « on chiffre », « vous choisissez »."
+bad = ["Le travail est chiffré au prix du marché."]
+good = ["On chiffre le travail au prix du marché.", "Elle est arrivée à 9 h."]
+
+[rule.params]
+participes_irreguliers = [
+  "fait", "faite", "faits", "faites", "mis", "mise", "mises", "pris", "prise", "prises", "écrit", "écrite", "écrits",
+  "dit", "dite", "dits", "inclus", "incluse", "compris", "comprise", "conçu", "conçue", "reçu", "reçue",
+  "vu", "vue", "vus", "vues", "ouvert", "ouverte", "couvert", "offert", "tenu", "tenue", "retenu", "remis", "remise",
+  "défini", "définie", "rendu", "rendue", "vendu", "vendue", "perçu", "perçue", "admis", "admise", "transmis", "transmise",
+  "choisi", "choisie", "choisis", "choisies", "fini", "finie", "rempli", "remplie", "établi", "établie", "suivi", "suivie",
+  "réuni", "réunie", "saisi", "saisie", "garanti", "garantie", "obtenu", "obtenue", "soutenu", "soutenue", "maintenu",
+  "maintenue", "prévu", "prévue", "prévus", "prévues", "connu", "connue", "connus", "reconnu", "reconnue", "entendu",
+  "attendu", "attendue", "conclu", "conclue", "résolu", "résolue", "exclu", "exclue", "lu", "lue",
+]
+participes_actifs = [
+  "allé", "allée", "allés", "allées", "arrivé", "arrivée", "arrivés", "arrivées", "entré", "entrée", "entrés", "entrées",
+  "monté", "montée", "montés", "né", "née", "nés", "passé", "passée", "passés", "resté", "restée", "restés", "restées",
+  "retourné", "retournée", "tombé", "tombée", "tombés", "venu", "venue", "venus", "devenu", "devenue", "devenus",
+  "parti", "partie", "partis", "sorti", "sortie", "sortis", "descendu", "descendue", "décédé", "mort", "morte",
+]
+
+[[rule]]
+id = "staccato"
+family = "rythme"
+check = "staccato"
+severity = "warn"
+message = "Trois phrases de quatre mots ou moins d'affilée."
+fix = "Fusionner en une phrase qui porte un fait."
+bad = ["Vous prouvez. Vous vendez. Vous gagnez."]
+good = ["Vous prouvez la demande en vendant 40 précommandes."]
+
+[[rule]]
+id = "regle-de-trois"
+family = "rythme"
+severity = "warn"
+escalate_at = 4
+flags = ""
+pattern = '''\b([a-zà-ÿ]{4,}), ([a-zà-ÿ]{4,}) et ([a-zà-ÿ]{4,})\b'''
+message = "Énumération ternaire réflexe."
+fix = "Garder le meilleur élément. Ou deux. Ou quatre, dont un très précis."
+bad = ["Un outil rapide, fiable et évolutif."]
+good = ["Un outil rapide."]
+
+[[rule]]
+id = "anaphore"
+family = "rythme"
+check = "anaphore"
+severity = "block"
+message = "Trois phrases d'affilée ouvertes par le même mot."
+fix = "Varier, sauf si la répétition produit un effet délibéré."
+bad = ["Nous créons. Nous livrons. Nous itérons."]
+good = ["Nous créons le produit, puis l'équipe le livre."]
+
+[[rule]]
+id = "chute-sans-fait"
+family = "rythme"
+scope = "last_sentence"
+kinds = ["paragraph"]
+severity = "warn"
+escalate_at = 4
+flags = ""
+pattern = '''^(?:C['’]est (?:le but|la clé|tout|ça|simple|binaire|mérité|logique|aussi simple que ça)\s*[.!]|Point\.|Point final\.|Rien de plus\.|Le reste suit\.|Tout est là\.|Tout se joue là\.|Simple\.|Voilà\.|Tout simplement\.|Ni plus,? ni moins\.|Ça change tout\.|Ça compte\.|Ça paie\.|Ça marche\.|Rien ne remplace [^.]{0,30}\.)\s*$'''
+message = "Chute courte qui claque sans apporter de fait."
+fix = "Supprimer la chute, ou la remplacer par un fait."
+bad = ["On teste avant de coder. Le reste suit."]
+good = ["On teste avant de coder. Le test coûte 200 €."]
+
+[[rule]]
+id = "connecteur-scolaire"
+family = "rythme"
+scope = "first_sentence"
+kinds = ["paragraph"]
+severity = "warn"
+escalate_at = 3
+flags = ""
+pattern = '''^(?:Par ailleurs|En effet|Néanmoins|Toutefois|De plus|En outre|Premièrement|Deuxièmement|Troisièmement|Finalement|Ainsi|Dès lors|De surcroît|Qui plus est),'''
+message = "Connecteur scolaire en tête de paragraphe."
+fix = "Enchaîner sur le fait, sans connecteur."
+bad = ["En effet, le marché recule."]
+good = ["Le marché recule de 3 %."]
+
+[[rule]]
+id = "voici-transition"
+family = "rythme"
+scope = "first_sentence"
+kinds = ["paragraph"]
+severity = "warn"
+escalate_at = 3
+flags = ""
+pattern = '''^(?:Voici|Voilà) '''
+message = "« Voici » en tête de paragraphe : le texte annonce au lieu de donner."
+fix = "Donner l'information sans l'annoncer."
+bad = ["Voici les trois étapes à suivre."]
+good = ["Trois étapes : signer, payer, livrer."]
+
+[[rule]]
+id = "c-est-la-que"
+family = "rythme"
+severity = "warn"
+escalate_at = 2
+pattern = '''\bc['’]est (?:précisément |exactement |justement )?(?:là|ici) qu(?:e |['’])'''
+message = "Pivot « c'est là que »."
+fix = "Dire ce qui se passe, sans pivot."
+bad = ["C'est là que tout se joue."]
+good = ["Le contrat se signe le 3 mars."]
+
+# ---------------------------------------------------------------- images et concepts
+
+[[rule]]
+id = "imaginez"
+family = "image"
+severity = "block"
+pattern = '''\bimaginez(?:-vous)? (?:un|une|des|que|qu['’]|le|la|les|vous)\b'''
+message = "Scène imaginaire posée à la place du cas réel."
+fix = "Décrire ce qui s'est passé, avec le fait réel."
+bad = ["Imaginez une autoroute pour vos données."]
+good = ["Notre client a divisé son temps de saisie par trois."]
+
+[[rule]]
+id = "analogie-reflexe"
+family = "image"
+severity = "warn"
+escalate_at = 2
+pattern = '''\bc['’]est comme si\b|\bpensez à (?:un|une)\b|\bvoyez (?:ça|cela) comme\b|\bà la manière d(?:['’]un|['’]une)\b|\bc['’]est l['’]équivalent d(?:['’]un|['’]une|e)\b|\bcomme (?:un|une) [\wÀ-ÿ]+ (?:pour|qui)\b'''
+message = "Analogie de réflexe."
+fix = "Garder l'analogie seulement si elle éclaire l'idée."
+bad = ["C'est comme si vous aviez un copilote."]
+good = ["Le logiciel propose la réponse, vous la validez."]
+
+[[rule]]
+id = "concept-invente"
+family = "image"
+severity = "warn"
+escalate_at = 2
+pattern = '''\b(?:le paradoxe|la dérive|le syndrome|le piège|l['’]illusion|la malédiction|le dilemme|l['’]effet|le biais|la spirale)\s+(?:de la|de l['’]|du|des|de)\s+[a-zà-ÿ]{4,}'''
+message = "Nom de théorie posé sur un phénomène ordinaire."
+fix = "Décrire simplement le phénomène."
+bad = ["C'est le paradoxe de la supervision."]
+good = ["Plus on supervise, moins l'équipe décide seule."]
+
+[[rule]]
+id = "metaphore-usee"
+family = "image"
+check = "repetition"
+severity = "warn"
+message = "La même image usée deux fois dans le texte."
+fix = "L'employer une fois, puis avancer."
+bad = ["Le levier de croissance.\n\nUn autre levier simple."]
+good = ["Le levier de croissance."]
+
+[rule.params]
+min = 2
+terms = [
+  "aventures?", "voyages?", "adn", "colonne vertébrale", "boussoles?", "moteurs?", "leviers?", "pierre angulaire",
+  "graines?", "chef d['’]orchestre", "couteau suisse", "marathons?", "jungle", "iceberg", "épine dorsale", "socles?",
+  "tremplins?", "fil rouge", "pierre à l['’]édifice", "recettes?", "carburant", "terrain de jeu",
+]
+
+[[rule]]
+id = "ecosysteme"
+family = "vocabulaire"
+check = "repetition"
+severity = "warn"
+message = "« écosystème » répété : le mot remplace marché, réseau, milieu."
+fix = "Le mot exact : marché, réseau, milieu, ville."
+params = { min = 3, terms = ["écosystèmes?"] }
+bad = ["L'écosystème.\n\nCet écosystème.\n\nUn écosystème."]
+good = ["L'écosystème du sol."]
+
+# ---------------------------------------------------------------- sujets et agents
+
+[[rule]]
+id = "objet-agent"
+family = "agent"
+check = "objet_agent"
+severity = "block"
+message = "Une chose reçoit un verbe d'action humain : « le marché tranche », « les chiffres parlent »."
+fix = "Mettre en sujet la personne qui agit : vous, on, le jury, les acheteurs."
+bad = ["Le chapeau décide du reste.", "Les chiffres parlent d'eux-mêmes."]
+good = ["Le jury tranche à 18 h.", "Les assureurs refusent de couvrir ce risque.", "Ce mot veut dire « pierre ».", "Il a dit ce qu'on sait déjà."]
+
+[rule.params]
+verbes = [
+  "décide", "décident", "tranche", "tranchent", "choisit", "choisissent", "raconte", "racontent", "parle", "parlent",
+  "ment", "mentent", "pardonne", "pardonnent", "récompense", "récompensent", "sanctionne", "sanctionnent", "dicte", "dictent",
+  "s['’]occupe", "s['’]occupent", "fait le reste", "font le reste", "fait le travail", "font le travail", "veut", "veulent",
+  "punit", "punissent", "exige", "exigent", "réclame", "réclament", "attend", "attendent", "trahit", "trahissent",
+  "hurle", "hurlent", "crie", "crient", "murmure", "murmurent", "ose", "osent", "refuse", "refusent", "sait", "savent",
+  "aime", "aiment", "apprend", "apprennent", "déteste", "détestent", "se moque", "se moquent",
+]
+sujets_humains = [
+  "fondateur", "fondatrice", "founder", "investisseur", "investisseuse", "vc", "jury", "client", "cliente", "équipe",
+  "coach", "mentor", "speaker", "intervenant", "intervenante", "participant", "participante", "public", "associé", "associée",
+  "cofondateur", "cofondatrice", "ceo", "cto", "recruteur", "recruteuse", "candidat", "candidate", "acheteur", "acheteuse",
+  "utilisateur", "utilisatrice", "prospect", "lecteur", "lectrice", "banquier", "banquière", "avocat", "avocate", "comptable",
+  "salarié", "salariée", "manager", "dirigeant", "dirigeante", "patron", "patronne", "entrepreneur", "entrepreneuse",
+  "personne", "gens", "juge", "organisateur", "organisatrice", "animateur", "animatrice", "hôte", "auteur", "autrice",
+  "visiteur", "visiteuse", "abonné", "abonnée", "angel", "partenaire", "chef", "fonds", "agent", "ia", "llm", "modèle",
+  "salle", "promo", "élève", "étudiant", "étudiante", "président", "présidente", "médecin", "invité", "invitée", "fan",
+  "banque", "tribunal", "comité", "lp", "startup", "entreprise", "boîte", "structure", "audience", "membre", "juré",
+  "assureur", "électeur", "électrice", "élu", "élue", "député", "députée", "sénateur", "maire", "ministre", "gouvernement",
+  "parent", "enfant", "habitant", "habitante", "citoyen", "citoyenne", "consommateur", "consommatrice", "spectateur",
+  "spectatrice", "joueur", "joueuse", "entraîneur", "arbitre", "soldat", "roi", "reine", "peuple", "police", "armée",
+  "employeur", "employé", "employée", "travailleur", "travailleuse", "syndicat", "patient", "patiente", "chercheur",
+  "chercheuse", "scientifique", "ingénieur", "professeur", "enseignant", "enseignante", "journaliste", "critique",
+  "éditeur", "éditrice", "homme", "femme", "famille", "voisin", "voisine", "ami", "amie", "mère", "père", "frère",
+  "sœur", "fils", "fille", "chat", "chien", "animal", "animaux", "oiseau", "foule", "marché", "robot", "duo", "trio",
+"monde", "cardinal", "duc", "duchesse", "comte", "comtesse", "marquis", "marquise", "baron", "prince", "princesse",
+"capitaine", "colonel", "général", "abbé", "curé", "évêque", "pape", "moine", "docteur", "monsieur", "madame",
+"mademoiselle", "maître", "valet", "domestique", "servante", "paysan", "paysanne", "ouvrier", "ouvrière", "mineur",
+"bourgeois", "noble", "garçon", "petit", "petite", "vieux", "vieille", "jeune", "malade", "témoin", "accusé",
+"qui", "un", "une", "cela", "ça", "premier", "première", "deuxième", "second", "seconde", "dernier", "dernière", "partner", "procureur", "directeur", "directrice", "responsable", "vendeur", "vendeuse", "commercial", "fournisseur",
+]
+
+[[rule]]
+id = "sujet-abstrait"
+family = "agent"
+severity = "warn"
+escalate_at = 5
+flags = ""
+pattern = '''(?:^|[.!?]\s+|: )(?:La|Le|L['’]|Cette|Cet|Ce|Une|Un|Votre|Notre)\s?(?:stratégie|approche|méthode|méthodologie|solution|outil|plateforme|technologie|modèle|processus|système|dispositif|programme|démarche|offre|produit|fonctionnalité|framework|logiciel|automatisation|innovation|accompagnement|formation|contenu|architecture|cadre|tableau de bord|pipeline|workflow)\s+(?:\w+\s+){0,3}?(?:permet|permettent|garantit|garantissent|offre|offrent|assure|assurent|transforme|transforment|aide|aident|apporte|apportent|facilite|facilitent|renforce|renforcent|favorise|favorisent|optimise|optimisent|simplifie|simplifient|libère|libèrent|accélère|accélèrent|vous aide|vous permet|vous offre|vous libère)\b'''
+message = "Un nom abstrait agit à la place d'une personne."
+fix = "Mettre une personne en sujet : vous, on, le client."
+bad = ["Cette plateforme vous permet de gagner du temps."]
+good = ["Vous gagnez deux heures par semaine avec la plateforme."]
+
+[[rule]]
+id = "foule-vague"
+family = "source"
+severity = "warn"
+escalate_at = 2
+pattern = '''\b(?:la plupart|la majorité|beaucoup|la moitié|nombre|trop|peu) d(?:es|e) (?:fondateurs|founders|startups|équipes|entrepreneurs|entreprises|gens|personnes|utilisateurs|clients|marques|experts|candidats|investisseurs)\b'''
+message = "Foule invoquée sans donnée."
+fix = "Nommer un cas, ou donner la donnée."
+bad = ["La plupart des fondateurs sous-estiment le BFR."]
+good = ["Sur nos 40 dossiers, 31 sous-estimaient le BFR."]
+
+[[rule]]
+id = "pourcentage-population"
+family = "source"
+severity = "block"
+unless = '''\]\(|https?://|\[\^|\bsource\b|\bselon\b|\bd['’]après\b|\(\w+,? \d{4}\)'''
+pattern = '''\b\d{1,3} ?% des (?:startups|fondateurs|founders|entreprises|candidats|investisseurs|utilisateurs|équipes|projets|clients|prospects|gens|personnes|Français|salariés|managers|consommateurs)\b'''
+message = "Pourcentage appliqué à une population, sans source dans la phrase."
+fix = "Mettre la source dans la phrase, ou supprimer le chiffre."
+bad = ["80 % des startups échouent la première année."]
+good = ["Selon l'Insee, 30 % des entreprises disparaissent avant trois ans."]
+
+[[rule]]
+id = "verbe-anglais"
+family = "vocabulaire"
+severity = "warn"
+pattern = '''\b(?:shipp?(?:er|é|ée|és|ez|ent)|scal(?:er|é|ée|és|ez)|seed(?:é|ée|és)|fitt?(?:er|é)|ping(?:er|é|ue)|build(?:er|é|ent|ez)|refactor(?:er|é)|skipp?(?:er|é|ez)|lock(?:er|é)|vest(?:er|é)|curat(?:er|é|ée)|plugg?(?:er|é|ée)|disrupt(?:er|é|ent)|onboard(?:er|é|ée|és|ent)|délivr(?:er|e|ent|é|ée|és))\b'''
+message = "Verbe anglais conjugué à la française."
+fix = "Livrer, passer à l'échelle, intégrer, perturber."
+bad = ["On a shippé la version 2."]
+good = ["On a livré la version 2."]
+
+# ---------------------------------------------------------------- annonces
+
+[[rule]]
+id = "annonce-outillage"
+family = "structure"
+severity = "block"
+pattern = '''\b(?:j['’]ai|nous avons|on a) besoin (?:de |d['’])(?:un|deux|trois) (?:mots?|notions?|concepts?|idées?)\b|\bil (?:me|nous) faut (?:un|deux|trois) (?:mots?|notions?|concepts?)\b|(?:^|[.!?] )(?:Deux|Trois|Quatre|Quelques) exemples (?:montrent|illustrent|permettent)\b|\bje (?:reviendrai|vais revenir) (?:à la fin|plus loin|plus tard|en conclusion)\b|\bje reviens pour finir\b'''
+message = "Le texte annonce ce qu'il va faire au lieu de le faire."
+fix = "Écrire directement la définition, l'exemple ou le retour au sujet."
+bad = ["Pour expliquer cette histoire, j'ai besoin de deux mots.", "Je reviendrai à la fin sur ce point."]
+good = ["La zemblanité désigne la découverte malheureuse."]
+
+[[rule]]
+id = "annonce-demande"
+family = "structure"
+severity = "block"
+pattern = '''\b(?:notre|la|ma|une) (?:demande|requête|priorité) principale\b'''
+message = "Annonce de la demande."
+fix = "Formuler la demande seule, en fin de texte."
+bad = ["Notre demande principale tient en une ligne."]
+good = ["Pourriez-vous nous présenter à Marie ?"]
+
+[[rule]]
+id = "rituel-fin"
+family = "rituel"
+severity = "block"
+pattern = '''\bn['’]hésitez (?:pas|surtout pas) à\b'''
+message = "« N'hésitez pas à » : formule de fin automatique."
+fix = "Nommer l'action : « répondez à cet email », « appelez le 01... »."
+bad = ["N'hésitez pas à nous contacter."]
+good = ["Répondez à cet email avant vendredi."]
+
+[[rule]]
+id = "scene-inventee"
+family = "image"
+scope = "first_sentence"
+kinds = ["paragraph"]
+severity = "block"
+flags = ""
+pattern = '''^[A-ZÉ][\w-]+(?: [A-ZÉ][\w-]+)?, un (?:matin|soir|après-midi|lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche|jour)\b'''
+message = "Ouverture sur une scène inventée."
+fix = "Ouvrir sur un fait sourcé."
+bad = ["Lyon, un mardi matin à la Confluence. Marc ouvre son ordinateur."]
+good = ["Le 4 mars 2025, Marc a signé son premier client."]
+
+[[rule]]
+id = "meta-seo"
+family = "rituel"
+severity = "block"
+pattern = '''\ble SERP\b|\bguides? concurrents?\b|\baucun (?:guide|article|comparatif|contenu) (?:français|francophone|en français)\b|\bnulle part ailleurs\b|\bles autres (?:guides|articles|comparatifs)\b|\binformation gain\b|\bmots?-clés? (?:cible|principal|secondaire)\b|\bsi vous (?:avez )?cherch(?:ez|é) [«"]'''
+message = "Le brief SEO fuit dans le texte."
+fix = "Le lecteur ne connaît pas le brief : supprimer, dire le fait."
+bad = ["Contrairement aux guides concurrents, nous détaillons le calcul."]
+good = ["Le calcul détaillé suit."]
+
+[[rule]]
+id = "faire-la-difference"
+family = "remplissage"
+severity = "block"
+pattern = '''\bf(?:ont|ait|aire|era|eront|aisait) (?:toute )?la différence\b|\b(?:vaut|valent) (?:de l['’]or|son pesant d['’]or)\b|\b(?:n['’]est pas|ce n['’]est pas|pas) (?:anodin|anecdotique|un détail|négligeable)\b'''
+message = "Cliché de valeur sans fait."
+fix = "Dire la différence mesurée."
+bad = ["Ce détail fait toute la différence.", "Ce n'est pas anodin."]
+good = ["Ce détail réduit le churn de 2 points."]

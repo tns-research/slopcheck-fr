@@ -1,0 +1,5 @@
+- id: slopcheck
+  name: slopcheck (tics d'écriture IA en français)
+  entry: slopcheck check
+  language: python
+  types_or: [markdown, text]

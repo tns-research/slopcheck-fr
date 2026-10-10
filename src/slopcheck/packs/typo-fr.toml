@@ -1,0 +1,64 @@
+# Typographie française. Un modèle qui écrit en anglais puis traduit garde
+# la typographie anglaise : guillemets droits, pas d'espace avant « ? ! ; : »,
+# titres en casse anglaise, majuscules sans accent. Pack chargé par défaut,
+# toutes ses règles sortent en WARN.
+
+[pack]
+name = "typo-fr"
+description = "Typographie française : guillemets, espaces, casse des titres"
+
+[[rule]]
+id = "guillemets-anglais"
+family = "typographie"
+severity = "warn"
+max_per_doc = 3
+pattern = '''"[^"\n]{2,120}"|“[^”\n]{2,120}”'''
+message = "Guillemets anglais."
+fix = "Guillemets français « » avec espaces insécables."
+bad = ["Il a parlé de \"croissance\" pendant une heure."]
+good = ["Il a parlé de « croissance » pendant une heure."]
+
+[[rule]]
+id = "espace-ponctuation"
+family = "typographie"
+severity = "warn"
+max_per_doc = 3
+flags = ""
+pattern = '''[A-Za-zÀ-ÖØ-öø-ÿ»)\]](?:[?!;]|:(?=\s))'''
+message = "Ponctuation double collée au mot, à l'anglaise."
+fix = "Espace insécable avant « ? », « ! », « ; » et « : »."
+bad = ["Vous venez jeudi? Oui!", "Note: le délai court."]
+good = ["Vous venez jeudi ? Oui !", "Rendez-vous à 10:30."]
+
+[[rule]]
+id = "casse-titre"
+family = "typographie"
+check = "title_case"
+severity = "warn"
+message = "Titre en casse anglaise (Chaque Mot En Majuscule)."
+fix = "Casse de phrase : majuscule au premier mot et aux noms propres."
+params = { mots_outils = ["dans", "pour", "avec", "sans", "sous", "vers", "chez", "entre", "leur", "leurs", "votre", "notre", "cette", "comme"] }
+bad = ["## Les Cinq Erreurs Fréquentes Des Fondateurs"]
+good = ["## Les cinq erreurs fréquentes des fondateurs", "## Paris Saint-Germain contre Olympique Lyonnais"]
+
+[[rule]]
+id = "majuscule-sans-accent"
+family = "typographie"
+severity = "warn"
+max_per_doc = 3
+flags = ""
+pattern = '''\b(?:Etat|Etats|Ecole|Eglise|Equipe|Economie|Etude|Etape|Evolution|Election|Energie|Ete|Elysée|Egypte)\b|(?:^|[.!?]\s+)A (?:partir|la|l['’]|ce|cette|cet|ces|chaque|noter|mon|ma|mes|vous|nous|propos|savoir)\b'''
+message = "Majuscule sans accent."
+fix = "État, École, À partir..."
+bad = ["A partir de lundi, l'Etat paie."]
+good = ["À partir de lundi, l'État paie."]
+
+[[rule]]
+id = "double-tiret"
+family = "typographie"
+severity = "warn"
+pattern = '''(?<![-!<])\s--\s(?!-)'''
+message = "Double tiret employé comme tiret d'incise."
+fix = "Virgule, parenthèses ou point."
+bad = ["Le produit -- lancé en mars -- marche."]
+good = ["Le produit, lancé en mars, marche."]

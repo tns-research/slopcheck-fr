@@ -1,0 +1,23 @@
+# Exemple de pack personnel. Chargez-le depuis .slopcheck.toml :
+#   packs = ["fr-signatures", "typo-fr", "./slopcheck-perso.toml"]
+# Ajoutez une règle à la main, ou avec :
+#   slopcheck learn "la phrase rejetée" --save slopcheck-perso.toml
+
+[pack]
+name = "perso"
+description = "Mes tournures interdites"
+
+[[rule]]
+id = "au-final"
+family = "perso"
+severity = "warn"
+pattern = '''\bau final\b'''
+message = "« Au final » : calque familier de « in the end »."
+fix = "Finalement, en fin de compte, ou rien."
+bad = ["Au final, le client a signé."]
+good = ["La version finale part lundi."]
+
+# Compléter une règle intégrée sans la recopier : ajouter des sujets humains
+# pour que « le kiné décide » ne soit plus signalé par objet-agent (pack fr-strict).
+# [params_add.objet-agent]
+# sujets_humains = ["kiné", "pharmacien"]

@@ -1,0 +1,28 @@
+name: Signaler un tic
+description: Une tournure que les modèles répètent et que slopcheck ne relève pas.
+labels: ["nouveau tic"]
+body:
+  - type: textarea
+    id: extrait
+    attributes:
+      label: Extrait
+      description: Collez la phrase telle que le modèle l'a écrite, avec un peu de contexte.
+    validations:
+      required: true
+  - type: input
+    id: modele
+    attributes:
+      label: Modèle
+      placeholder: "Claude Sonnet, GPT-5.6, Gemini, Mistral…"
+    validations:
+      required: true
+  - type: input
+    id: genre
+    attributes:
+      label: Type de texte
+      placeholder: "post LinkedIn, email, README, article…"
+  - type: textarea
+    id: correction
+    attributes:
+      label: Version corrigée
+      description: Comment un humain l'aurait écrite.

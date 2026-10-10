@@ -1,0 +1,1 @@
+Excellent week-end en famille dans cet hôtel idéalement situé au bord de la mer. La chambre était propre et confortable, le personnel accueillant et attentionné, et la vue magnifique. Les enfants ont adoré pouvoir profiter de la plage à quelques pas. Une très belle adresse où nous reviendrons avec plaisir !

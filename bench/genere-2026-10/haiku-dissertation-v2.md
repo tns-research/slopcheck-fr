@@ -1,0 +1,11 @@
+**Le travail est-il une condition du bonheur ?**
+
+Le chômage, l'oisiveté subie ou la retraite forcée laissent souvent un vide que rien ne comble. Pourtant, le travail peut aussi être source d'épuisement, d'humiliation et d'aliénation. Faut-il voir dans l'activité professionnelle une condition du bonheur, ou son principal obstacle ?
+
+Plusieurs arguments plaident pour la première thèse. D'abord, le travail structure le temps. Il organise la journée et protège de l'ennui, que Pascal considérait comme l'un des grands maux de l'homme. Ensuite, il procure une reconnaissance sociale : être utile à autrui, sentir que l'on compte pour quelqu'un, c'est éprouver une dignité que l'argent seul ne donne pas. Enfin, il permet de développer des capacités. Aristote associait le bonheur à l'accomplissement de ce que l'on est, et l'artisan qui perfectionne son geste connaît cette joie de l'œuvre achevée.
+
+Ce constat ne doit pas faire oublier les dangers du travail. Chez Marx, le travail salarié devient aliéné lorsque l'ouvrier ne se reconnaît plus dans ce qu'il produit et que son activité lui est imposée par la nécessité. Aujourd'hui encore, la souffrance professionnelle, le burn-out ou le sentiment d'être interchangeable montrent que l'emploi peut détruire ce qu'il devait construire. Dans ce cas, le travail n'est pas une condition du bonheur, mais une source de malheur.
+
+Il faut donc distinguer le travail en général et les conditions concrètes où il s'exerce. Le problème vient moins de l'activité elle-même que de son organisation : absence d'autonomie, dépendance économique, perte de sens. Un travail choisi, qui laisse place à la créativité et à la coopération, peut procurer une satisfaction profonde. Un travail subi, sans reconnaissance, peut au contraire ruiner la vie de celui qui l'accomplit.
+
+On peut alors proposer une thèse nuancée. Le travail n'est pas une condition suffisante du bonheur : un emploi ne garantit ni le contentement ni le respect de soi. Il en est pourtant une condition probablement nécessaire, car il offre un cadre où l'homme peut se réaliser, se relier aux autres et donner forme à ses capacités. Encore faut-il que ce travail soit libre, digne et porteur de sens. Le bonheur ne tient donc pas à l'effort de travailler, mais à la possibilité de travailler en étant reconnu comme un sujet et non comme un simple moyen.

@@ -1,0 +1,543 @@
+# Signatures IA : tournures rares chez un auteur humain, fréquentes dans un
+# texte généré. Pack chargé par défaut. Chaque règle BLOCK de ce pack doit
+# rester sous 0,2 occurrence pour 1 000 mots sur le corpus humain de
+# référence (slopcheck bench). Les règles plus bavardes sortent en WARN.
+
+[pack]
+name = "fr-signatures"
+description = "Tics d'écriture IA en français, calibrés sur un corpus humain"
+
+# ---------------------------------------------------------------- ponctuation
+
+[[rule]]
+id = "em-dash"
+family = "ponctuation"
+check = "em_dash"
+severity = "warn"
+escalate_at = 3
+message = "Tiret cadratin en incise : un réflexe de typographie anglaise."
+fix = "Virgule, parenthèses, deux-points ou point. Le tiret reste permis en tête de réplique de dialogue."
+bad = ["Le produit — lancé en mars — a trouvé son public."]
+good = ["— Bonjour, dit-il en entrant.", "Il se tut. — Et vous ? demanda-t-elle.", "Le produit, lancé en mars, a trouvé son public.", "La guerre de 1914–1918.", "Altitude : 1 800 – 2 200 m."]
+
+# ---------------------------------------------------------------- titres
+
+[[rule]]
+id = "titre-relatif"
+family = "titre"
+check = "title_relative"
+severity = "block"
+kinds = ["heading"]
+message = "Intertitre en proposition relative : il promet une révélation au lieu de nommer le sujet."
+fix = "Groupe nominal direct (« Le seuil de dépense »), ou supprimer l'intertitre."
+bad = ["## Le seuil qui déclenche la dépense", "## Ce que personne ne vous dit sur le BFR"]
+good = ["## Le seuil de dépense", "## Qu'est-ce que le BFR ?", "### Vérifier qu'un serveur répond", "## Plutôt qu'un deck, une démo", "## Avant qu'un VC réponde"]
+
+[[rule]]
+id = "etiquette-relative"
+family = "titre"
+check = "title_relative"
+severity = "warn"
+kinds = ["paragraph", "list"]
+message = "Étiquette introductive en proposition relative, posée devant le contenu."
+fix = "Supprimer l'étiquette et commencer par le fait."
+bad = ["Le calcul que personne ne fait :"]
+good = ["Le calcul de marge :", "Une phrase complète qui se termine par un point, avec un relatif que voici."]
+
+[[rule]]
+id = "formule-titre"
+family = "titre"
+kinds = ["heading"]
+severity = "block"
+pattern = '''\bguide (?:ultime|complet|définitif|essentiel)\b|:\s*(?:le |votre )?guide pratique\b|\b(?:menace|risque|danger|mythe|effet de mode|fantasme) ou (?:opportunité|réalité|révolution)\b|\btout ce qu['’]il faut savoir\b|\bplus (?:important|essentiel|crucial|pertinent) que jamais\b|\bmythes et réalités\b|^\W*\d+ (?:façons|astuces|conseils|erreurs|raisons|secrets|clés) (?:de|pour|à|qui|d['’])|,\s*décryptée?s?\s*$|:\s*décryptage\b'''
+message = "Formule de titre de générateur."
+fix = "Titre qui nomme le sujet précis : « Lever 500 000 € en BSA Air »."
+bad = ["# L'IA et le métier de comptable : menace ou opportunité ?", "# Le télétravail en PME : le guide pratique", "# Le BFR : tout ce qu'il faut savoir", "## 7 astuces pour réussir votre levée", "# Le guide ultime de la prospection"]
+good = ["# Le BFR d'une startup SaaS", "## Sept erreurs relevées sur 40 decks"]
+
+[[rule]]
+id = "intertitres-questions"
+family = "titre"
+check = "heading_questions"
+severity = "warn"
+params = { min = 3 }
+message = "Intertitres en question à la chaîne : un plan de FAQ plaqué sur un article."
+fix = "Intertitres affirmatifs qui donnent la réponse."
+bad = ["## Qu'est-ce que le BFR ?\n\nTexte.\n\n## Pourquoi est-il important ?\n\nTexte.\n\n## Comment le calculer ?\n\nTexte."]
+good = ["## FAQ\n\n### Combien ?\n\nT.\n\n### Quand ?\n\nT.\n\n### Où ?\n\nT.", "## Le BFR\n\nTexte.\n\n## Le calcul\n\nTexte.\n\n## Comment le réduire ?\n\nTexte."]
+
+[[rule]]
+id = "gabarit-anglais"
+family = "titre"
+scope = "title"
+kinds = ["heading", "paragraph"]
+severity = "block"
+flags = ""
+pattern = '''^\W*(?:Key Takeaways|Takeaways|TL;?DR|FAQs|Pull-quote|Final [Tt]houghts)\b|^\*\*Q\d+\.'''
+message = "Gabarit anglais resté dans le texte."
+fix = "Titre en français, ou supprimer le bloc."
+bad = ["## Key Takeaways", "## TL;DR"]
+good = ["## À retenir", "## FAQ"]
+
+# ---------------------------------------------------------------- ouvertures, rituels
+
+[[rule]]
+id = "ouverture-cliche"
+family = "rituel"
+severity = "block"
+pattern = '''^\W*Face (?:aux (?:enjeux|défis)|à l['’](?:essor|explosion|émergence|accélération|évolution)|à la (?:montée|multiplication|complexité))\b|\bdans un monde (?:où|en (?:constante|perpétuelle|pleine) (?:évolution|mutation)|qui (?:change|évolue))\b|\bà l['’]ère (?:du numérique|du digital|de l['’]IA|de l['’]intelligence artificielle)\b|\baujourd['’]hui plus que jamais\b|\bil n['’]a jamais été aussi (?:facile|simple|important|crucial|accessible)\b|\bfini le temps où\b|\bce n['’]est un secret pour personne\b|\ben (?:constante|perpétuelle) (?:évolution|mutation)\b'''
+message = "Ouverture passe-partout, collable en tête de n'importe quel article."
+fix = "Supprimer et ouvrir sur un fait : une date, un chiffre, un nom."
+bad = ["Dans un monde en constante évolution, les entreprises doivent s'adapter.", "À l'ère du numérique, tout va plus vite.", "Fini le temps où l'on prospectait au fax.", "Face aux enjeux environnementaux du siècle, le vélo progresse."]
+good = ["En 2025, 41 % des PME françaises vendaient en ligne, selon l'Insee.", "À l'heure où il est arrivé, la salle était pleine."]
+
+[[rule]]
+id = "rituel-article"
+family = "rituel"
+severity = "block"
+pattern = '''\b(?:dans cet article|dans ce guide(?: complet)?|dans ce billet|dans cette vidéo),? (?:nous|on|je) (?:allons|vous|va|vais)\b|\bque vous soyez (?:débutant|novice|expert|un |une |déjà )|\b(?:découvrons|explorons|plongeons)(?: ensemble| maintenant| dans| sans plus)\b|\bsans plus (?:attendre|tarder)\b|\bpassons maintenant à\b|\bentrons dans le vif du sujet\b|\bvous l['’]aurez compris\b|\bplong(?:er|ez|eons|e) dans (?:l['’]univers|le monde (?:fascinant|passionnant)|les (?:méandres|arcanes|secrets|coulisses))\b'''
+message = "Rituel d'article généré : annonce, transition ou clin d'œil au lecteur."
+fix = "Supprimer. Le texte commence au fait suivant."
+bad = ["Dans cet article, nous allons voir comment lever des fonds.", "Que vous soyez débutant ou expert, ce guide est pour vous.", "Découvrons ensemble les cinq étapes.", "Vous l'aurez compris, le BFR compte."]
+good = ["Il a plongé dans la Seine pour récupérer son téléphone.", "Cet article reprend les chiffres de 2024."]
+
+[[rule]]
+id = "conclusion-rituelle"
+family = "rituel"
+scope = "first_sentence"
+kinds = ["paragraph"]
+severity = "warn"
+flags = ""
+pattern = '''^(?:En conclusion|Pour conclure|En somme|En définitive|En résumé|Pour résumer),'''
+message = "Conclusion annoncée par une formule scolaire."
+fix = "Finir sur la dernière idée réelle, sans l'annoncer."
+bad = ["En conclusion, le BFR mérite votre attention."]
+good = ["La conclusion du rapport tient compte des chiffres de mars."]
+
+[[rule]]
+id = "pret-a"
+family = "rituel"
+severity = "block"
+pattern = '''\b(?:alors,? )?prêts? à (?:passer à l['’]action|vous lancer|franchir le pas|sauter le pas|faire le grand saut|relever le défi|passer au niveau supérieur)\b[^.!?]*\?'''
+message = "Question d'appel à l'action de coach."
+fix = "Donner l'action concrète : « Inscrivez-vous avant le 12 mars »."
+bad = ["Alors, prêt à passer à l'action ?"]
+good = ["Le dossier est prêt à partir."]
+
+[[rule]]
+id = "fin-equilibriste"
+family = "rituel"
+severity = "block"
+pattern = '''\btout dépend de (?:vos|votre|tes|ton|ta) (?:besoins|objectifs|situation|contexte|priorités)\b|\bl['’]essentiel est de trouver (?:le bon|un juste) équilibre\b|\ble choix (?:vous|t['’]) appartient\b'''
+message = "Fin sans position : le texte se retire au moment de conclure."
+fix = "Prendre position, ou donner le critère de choix chiffré."
+bad = ["Au final, tout dépend de vos besoins.", "L'essentiel est de trouver le bon équilibre."]
+good = ["Le prix dépend du volume commandé."]
+
+# ---------------------------------------------------------------- artefacts de chatbot
+
+[[rule]]
+id = "formule-assistant"
+family = "chatbot"
+severity = "block"
+pattern = '''\bj['’]espère que (?:cela|ça|ceci|ces (?:informations|conseils)) (?:vous |t['’])?(?:aide|aidera|a aidé|sera utile|seront utiles)\b|\ben tant qu['’](?:IA|intelligence artificielle|assistant|modèle de langage)\b|\bselon (?:mes|ma) (?:dernières? )?(?:connaissances|données|mise à jour)\b|\b(?:excellente|très bonne|bonne) question\s*!|\bbien sûr\s*!\s*voici\b|\bvoici (?:une|la) version (?:révisée|améliorée|retravaillée|corrigée)\b|\bn['’]hésitez pas (?:si vous avez (?:d['’]autres|des) questions|à me (?:dire|demander|faire savoir|solliciter))\b|\bje reste à (?:votre|ta) disposition pour (?:toute|d['’]autres) (?:question|modification)s?\b'''
+message = "Phrase d'assistant conversationnel restée dans le texte."
+fix = "Supprimer."
+bad = ["J'espère que cela vous aide !", "Bien sûr ! Voici une proposition.", "En tant qu'IA, je ne peux pas juger."]
+good = ["J'espère vous voir jeudi.", "Bien sûr, il faut un devis."]
+
+[[rule]]
+id = "artefact-chatbot"
+family = "chatbot"
+scope = "raw"
+severity = "block"
+pattern = '''oaicite|contentReference\[|utm_source=chatgpt\.com|utm_source=openai|turn\d+(?:search|view|news)\d+|【\d+†'''
+message = "Artefact technique copié depuis une interface de chatbot."
+fix = "Supprimer la balise ou le paramètre d'URL."
+bad = ["Voir [le rapport](https://insee.fr/x?utm_source=chatgpt.com).", "Selon l'Insee :contentReference[oaicite:0]{index=0}."]
+good = ["Voir [le rapport](https://insee.fr/x)."]
+
+[[rule]]
+id = "placeholder"
+family = "chatbot"
+severity = "block"
+kinds = ["paragraph", "list", "heading"]
+pattern = '''\[(?:Votre|Vos|Ton|Ta|Nom|Prénom|Insérer|Entreprise|Date|Lien|Ville|Montant|Produit)\b[^\]\n]{0,40}\]'''
+message = "Champ à remplir laissé dans le texte."
+fix = "Remplacer par la valeur réelle."
+bad = ["Bonjour, je suis [Votre nom], de [Entreprise]."]
+good = ["Bonjour, je suis Léa, de Fermes d'Avenir.", "Voir [votre espace](https://exemple.fr/compte)."]
+
+# ---------------------------------------------------------------- mise en scène
+
+[[rule]]
+id = "fausse-revelation"
+family = "mise-en-scene"
+severity = "block"
+pattern = '''\bet voici (?:pourquoi|comment|le plus)\b|\bvoici (?:pourquoi|comment)\s*[.:!]|\bmais ce n['’]est pas tout\b|\bla réponse est simple\s*:|\ble constat est sans appel\b|\bune chose est sûre\s*:|\bautant le dire tout de suite\b|\bbonne nouvelle\s*:|\bet si je vous disais\b|\bavouons-le\b|\brelisez cette phrase\b|\baccrochez-vous\b|\btenez-vous bien\b|\bvous n['’]allez pas (?:le )?croire\b|\ble plus (?:surprenant|fou|dingue|inattendu)(?:,| \?| :| dans tout ça)|\broulement de tambour\b|\bc['’]est là que (?:ça|ca|les choses) devien(?:t|nent) intéressant'''
+message = "Faux suspense : le texte annonce une révélation au lieu de la donner."
+fix = "Donner l'information tout de suite."
+bad = ["Et voici pourquoi.", "Mais ce n'est pas tout : le prix baisse.", "C'est là que ça devient intéressant.", "La réponse est simple : vendre."]
+good = ["Voici le devis signé.", "Ce n'est pas tout à fait exact."]
+
+[[rule]]
+id = "honnetete-performative"
+family = "mise-en-scene"
+severity = "block"
+pattern = '''\b(?:soyons|restons) (?:honnêtes?|directs?|francs?|lucides?|clairs?)\b|^\W*Honnêtement,|\bla vérité,? c['’]est que\b|\bla (?:réponse|vérité) honnête\b|\bsans (?:détour|langue de bois|filtre)\b|\bpour être (?:tout à fait )?(?:honnête|transparent|franc)\b'''
+message = "Sincérité proclamée : elle suggère que le reste du texte ne l'est pas."
+fix = "Supprimer, le fait suffit."
+bad = ["Soyons honnêtes : la levée a échoué.", "La vérité, c'est que personne n'achète."]
+good = ["Il est resté honnête jusqu'au bout."]
+
+[[rule]]
+id = "entre-en-jeu"
+family = "mise-en-scene"
+severity = "block"
+pattern = '''\bc['’]est (?:là|ici|alors) qu(?:e|['’])\s?\S+(?: \S+){0,4} entre(?:nt)? en (?:jeu|scène)\b'''
+message = "Pivot de présentation : « c'est là que X entre en jeu »."
+fix = "Dire ce que fait X, directement."
+bad = ["C'est là que notre outil entre en jeu."]
+good = ["Le remplaçant est entré en jeu à la 70e minute."]
+
+[[rule]]
+id = "question-de-savoir"
+family = "mise-en-scene"
+severity = "block"
+pattern = '''\bla question n['’]est (?:plus|pas) de savoir si\b|\bla (?:vraie|véritable) question\b|\bla seule question (?:qui (?:compte|vaille|importe)|à (?:se poser|poser)|,? c['’]est|:)|\ble (?:vrai|véritable) (?:enjeu|défi|problème|sujet),? c['’]est\b|\bla (?:vraie|véritable) (?:transformation|révolution|différence|valeur|force|richesse|clé) (?:est|se situe|se trouve|réside)\b'''
+message = "Fausse question posée pour mettre en scène la réponse."
+fix = "Énoncer la réponse."
+bad = ["La question n'est plus de savoir si, mais quand.", "La vraie question est ailleurs.", "Le vrai enjeu, c'est la marge."]
+good = ["La question du jury portait sur la marge."]
+
+[[rule]]
+id = "qui-change-tout"
+family = "mise-en-scene"
+severity = "block"
+pattern = '''\b(?:qui|ce qui|ça|cela) change tout\b|\b(?:ce que|dont) personne ne (?:vous )?(?:dit|parle|explique)\b|\bpersonne n['’]en parle\b'''
+message = "Promesse d'importance à la place du fait."
+fix = "Dire ce qui change, et pour qui."
+bad = ["Le détail qui change tout.", "Ce que personne ne vous dit sur la levée."]
+good = ["Le détail a changé le prix de 4 %."]
+
+# ---------------------------------------------------------------- remplissage
+
+[[rule]]
+id = "il-convient-de-noter"
+family = "remplissage"
+severity = "block"
+pattern = '''\bil (?:convient|est (?:important|essentiel|crucial|intéressant|primordial)) de (?:noter|souligner|rappeler|mentionner|préciser|garder à l['’]esprit)\b|\bforce est de constater\b|\bn['’]est plus à (?:démontrer|prouver)\b'''
+message = "Formule de remplissage qui annonce une remarque au lieu de la faire."
+fix = "Écrire la remarque seule."
+bad = ["Il convient de noter que le délai est court.", "Force est de constater que le marché recule.", "Son efficacité n'est plus à démontrer."]
+good = ["Le délai est court."]
+
+[[rule]]
+id = "veritable"
+family = "intensificateur"
+scope = "sentence"
+severity = "warn"
+escalate_at = 2
+pattern = '''\bvéritables?\s+[a-zà-ÿ]'''
+unless = '''\b(?:faux|fausse|supposée?s?|prétendue?s?|apparente?s?)\b'''
+message = "« véritable » posé en intensificateur devant un nom."
+fix = "Supprimer le mot : « un atout » dit la même chose que « un véritable atout »."
+bad = ["C'est un véritable atout pour l'équipe.\n\nUne véritable révolution du secteur."]
+good = ["Le faux testament cachait le véritable héritier."]
+
+[[rule]]
+id = "role-cle"
+family = "intensificateur"
+severity = "warn"
+escalate_at = 2
+pattern = '''\bjou(?:e|ent|ait|aient|era|eront|ant|er) un rôle (?:clé|crucial|essentiel|primordial|déterminant|prépondérant|central|incontournable|fondamental)\b'''
+message = "« joue un rôle clé » : la phrase dit qu'il y a un rôle sans dire lequel."
+fix = "Dire ce que fait l'acteur : « le comptable valide les notes de frais »."
+bad = ["La donnée joue un rôle clé dans la stratégie.\n\nLe CRM joue un rôle crucial."]
+good = ["Il joue un rôle secondaire dans le film."]
+
+[[rule]]
+id = "vocabulaire-ia"
+family = "vocabulaire"
+check = "lexical_density"
+severity = "block"
+message = "Plusieurs mots du vocabulaire par défaut des modèles dans le même paragraphe."
+fix = "Garder un mot choisi, remplacer les autres par le fait précis."
+bad = ["Notre approche holistique place l'humain au cœur de la démarche et offre une valeur ajoutée incontournable."]
+good = ["Notre approche place le client au centre : deux rendez-vous par mois."]
+
+# ---------------------------------------------------------------- structures
+
+[rule.params]
+min_distinct = 3
+terms = [
+  "incontournables?", "cruci(?:al|ale|aux|ales)", "primordia(?:l|le|ux|les)", "holistiques?", "synergies?",
+  "paysage (?:numérique|actuel|concurrentiel|digital|technologique)", "écosystèmes?", "tirer parti", "tirant parti",
+  "libérer (?:le|votre|son|tout le) potentiel", "mettre en lumière", "met en lumière", "mettre en avant",
+  "façonn(?:er|e|ent|ant)", "révolutionn(?:er|e|ent|ant|aire)", "fluidifi(?:er|e|ent)", "rationalis(?:er|e|ent)",
+  "robustes?", "pierre angulaire", "leviers?", "panoplie", "large éventail", "foisonnement", "véritables?",
+  "témoign(?:e|ent|ant) de", "s['’]inscri(?:t|vent) dans", "à part entière", "de premier plan", "à la pointe",
+  "dernière génération", "booster", "optimis(?:er|ez|ant)", "impuls(?:er|e)", "insuffl(?:er|e)",
+  "navigu(?:er|ez|ant) (?:dans|à travers|entre)", "décrypt(?:er|e|ons)", "décortiqu(?:er|e|ons)",
+  "transversalité", "enjeux? majeurs?", "défi de taille", "en constante évolution", "au cœur de",
+  "riche (?:histoire|patrimoine)", "valeur ajoutée", "approche (?:innovante|globale|holistique|sur mesure)",
+  "solutions? (?:innovantes?|sur mesure|clés en main)", "expérience (?:utilisateur )?(?:fluide|optimale|unique)",
+  "accompagn(?:er|e) (?:vers|dans) (?:la|le|votre|leur) (?:réussite|croissance|transformation)",
+  "emblématiques?", "irréprochables?", "pérennité", "sereinement", "envoût(?:er|ant|ante)", "dévoil(?:e|ent)",
+  "paysage (?:professionnel|économique|médiatique|entrepreneurial)", "(?:étape|concept|élément|facteur|point|enjeu|atout)s? clés?",
+  "atouts?", "faible valeur ajoutée", "mise en place réussie", "à forte valeur",
+]
+
+[[rule]]
+id = "mot-gonfle"
+family = "vocabulaire"
+severity = "warn"
+escalate_at = 3
+pattern = '''\bau cœur (?:de|du|des|d['’])|\bauthentiques?\b|\bexceptionnel(?:le)?s?\b|\brobustes?\b|\bleviers?\b|\bécosystèmes?\b|\batouts?\b|\bde taille\b|\bniché(?:e|s|es)?\b|\binédite?s?\b|\bincontournables?\b|\bcruci(?:al|ale|aux|ales)\b|\bprimordia(?:l|le|ux|les)\b|\bholistiques?\b|\bsynergies?\b|\bpierre angulaire\b|\bsans précédent\b|\binégalée?s?\b|\bclés? en main\b'''
+message = "Mot gonflé du vocabulaire des modèles : il promet de l'importance sans la montrer."
+fix = "Remplacer par le fait : « à 20 minutes de Grenoble » plutôt que « au cœur du Vercors », « tient 10 000 requêtes par seconde » plutôt que « robuste »."
+bad = ["Un gîte niché au cœur du Vercors.", "Une solution robuste.\n\nUn atout incontournable.\n\nUne étape cruciale."]
+good = ["Un gîte à Villard-de-Lans, à 20 minutes de Grenoble.", "La solution tient 10 000 requêtes par seconde."]
+
+[[rule]]
+id = "correction-deux-temps"
+family = "structure"
+severity = "block"
+pattern = '''\b(?:ce|cela|ça|il|elle|[\wÀ-ÿ]+) n['’]est pas (?:seulement |juste |simplement |qu['’]|un simple |une simple )?[^.!?;:]{1,60}?\s*[,:]\s*c['’]est\b|\bnon pas parce qu['’e][^.!?;]{1,80}?,\s*mais parce qu|\bil ne s['’]agit pas (?:seulement |juste |simplement )?(?:de |d['’])[^.!?;]{1,60}?,\s*mais (?:de |d['’])|\b(?:ce|cela|ça) n['’]est pas [^.!?;]{1,50}\.\s+C['’]est\b'''
+message = "Correction en deux temps : le texte réfute une idée que personne n'a avancée."
+fix = "Dire directement ce qui est : « Apprendre l'anglais, c'est 20 minutes par jour »."
+bad = ["Le BFR n'est pas un simple indicateur comptable : c'est le baromètre de la santé.", "Elles échouent non pas parce qu'elles manquent de clients, mais parce qu'elles manquent de trésorerie.", "Ce n'est pas un outil, c'est un partenaire.", "Il ne s'agit pas de vendre, mais de convaincre.", "Ce n'est pas un détail. C'est le cœur du sujet."]
+good = ["Ce n'est pas le bon fichier.", "Ce n'est pas lui qui a signé."]
+
+[[rule]]
+id = "contraste-appose"
+family = "structure"
+severity = "warn"
+escalate_at = 2
+pattern = '''(?<!non),\s*(?:et non(?: pas)?|pas)\s+(?!point\b|à pas\b|du tout\b|encore\b|toujours\b|seulement\b|forcément\b|plus\b|moins\b|que\b|qu|non plus\b|davantage\b|même\b|assez\b|trop\b|si\b|loin\b|mal\b|vrai\b|une? (?:seule?|mot|instant|bruit|âme|cri|souffle|geste|son)\b)(?![^.!?;:,]*\bn(?:e\b|['’]))(?=[^.!?;:,]*[A-Za-zÀ-ÿ0-9])[^.!?;:,]{2,60}[.!?]'''
+message = "Faux contraste en fin de phrase : « X, et non Y » ou « X, pas Y » écarte une option que personne n'a proposée."
+fix = "Garder la bonne option seule. Si l'erreur est fréquente, la décrire dans une phrase à part."
+bad = ["Créez-la au nom de la société, et non au nom d'un associé.", "Candidatez quand vous commencez à construire, pas trois mois avant.\n\nApprends des phrases, pas des mots isolés."]
+good = ["Il ne vient pas, pas plus que sa sœur.", "Elle avance pas à pas.", "Il faisait très chaud, pas un bruit ne venait de la maison."]
+
+[[rule]]
+id = "non-seulement-mais"
+family = "structure"
+severity = "warn"
+escalate_at = 3
+pattern = '''\bnon seulement\b[^.!?]{1,100}\bmais (?:aussi|également|encore|surtout)\b|\bpas (?:seulement|uniquement|simplement) [^.!?,]{1,60},\s*mais (?:aussi|également|surtout)\b'''
+message = "« non seulement X mais aussi Y » : construction d'amplification automatique."
+fix = "Dire X et Y simplement, ou garder seulement Y."
+bad = ["Il vend non seulement des livres mais aussi des disques.\n\nElle code non seulement vite mais aussi bien.\n\nOn gagne non seulement du temps mais aussi de l'argent."]
+good = ["Il vend des livres et des disques."]
+
+[[rule]]
+id = "moins-plus"
+family = "structure"
+severity = "block"
+flags = ""
+pattern = '''(?:^|[.!?]\s+)Moins de [^.!?]{1,40}\.\s+Plus de\b'''
+message = "Slogan en miroir « Moins de X. Plus de Y. »"
+fix = "Chiffrer le gain : « deux réunions par semaine au lieu de cinq »."
+bad = ["Moins de réunions. Plus de résultats."]
+good = ["Moins de réunions ont eu lieu en août."]
+
+[[rule]]
+id = "ni-ni-juste"
+family = "structure"
+severity = "block"
+flags = ""
+pattern = '''\bNi [^.!?]{1,40}\.\s*Ni [^.!?]{1,40}\.\s*(?:Juste|Seulement|Simplement|Uniquement)\b'''
+message = "Triple « Ni X. Ni Y. Juste Z. »"
+fix = "Dire Z."
+bad = ["Ni abonnement. Ni engagement. Juste un prix."]
+good = ["Ni lui ni elle ne sont venus."]
+
+[[rule]]
+id = "annonce-longueur"
+family = "structure"
+severity = "block"
+pattern = '''\b(?:approche|thèse|différence|réponse|logique|conviction|idée|philosophie|vision|méthode|leçon|secret|recette|principe|explication|positionnement|mission|morale|promesse)s?\b(?:\s+[\w'’-]+){0,4}?\s+(?:tient|tiennent|se résume|se résument)\s+(?:en|sur|dans|à)\s+(?:une|un|deux|trois|quelques|cette|ce)\b|\btient en une (?:seule )?(?:ligne|phrase)\s*:|\b(?:tient|tiennent|se résume|se résument|résumée?s?|expliquée?s?|détaillée?s?)\s+(?:sur|dans|en)\s+(?:cette|ce)\s+(?:page|lien|document|article)\b'''
+message = "Le texte annonce la taille de son contenu au lieu de le donner."
+fix = "Écrire le contenu. Le lien vient ensuite, en source."
+bad = ["Notre méthode tient en une phrase : vendre avant de coder.", "Notre approche tient sur cette page : [lien]."]
+good = ["Le contrat tient en quatre pages."]
+
+[[rule]]
+id = "participe-final"
+family = "structure"
+check = "participe_final"
+severity = "warn"
+escalate_at = 3
+message = "Participe présent de remplissage en fin de phrase : « ..., soulignant l'importance de ... »."
+fix = "Supprimer, ou en faire une phrase avec une preuve."
+bad = ["L'équipe a livré le module, soulignant l'importance de la collaboration.\n\nLe projet avance, offrant de nouvelles perspectives.\n\nLa ville investit, renforçant son attractivité."]
+good = ["Il est parti en courant, laissant la porte ouverte."]
+
+# ---------------------------------------------------------------- ampleur
+
+[rule.params]
+gerondifs = [
+  "soulignant", "permettant", "offrant", "garantissant", "assurant", "renforçant", "favorisant", "illustrant",
+  "marquant", "témoignant", "transformant", "ouvrant", "apportant", "contribuant", "reflétant", "positionnant",
+  "consolidant", "améliorant", "optimisant", "facilitant", "générant", "confirmant", "démontrant", "prouvant",
+  "rappelant", "créant", "plaçant", "ancrant", "redéfinissant", "révolutionnant", "propulsant", "valorisant",
+]
+
+[[rule]]
+id = "grandiloquence"
+family = "ampleur"
+severity = "block"
+pattern = '''\bmoment charnière\b|\bhéritage durable\b|\b(?:prochaine|nouvelle) ère\b|\btournant (?:décisif|historique)\b|\bchange(?:r|ra|nt)? la donne\b|\bgame[- ]?changer\b|\brévolutionner (?:le|la|les|notre|votre)\b|\bredéfini(?:r|t|ssent) (?:les contours|les codes|les règles|la manière)\b|\bréinvente(?:r|nt)? (?:le|la|les|notre|votre) (?:manière|façon|futur|avenir|secteur|métier)\b|\btransformer radicalement\b|\bboulevers(?:er|e|ent) (?:tout|le secteur|nos vies|l['’]industrie)\b|\bl['’]avenir de (?:l['’]humanité|notre société|notre civilisation)\b'''
+message = "Ampleur déclarée au-delà des faits."
+fix = "Ajuster l'ampleur aux faits. L'ordinaire peut être crédible."
+bad = ["Cette levée marque un moment charnière.", "Notre outil va révolutionner le recrutement.", "Une nouvelle ère commence pour la logistique."]
+good = ["La loi de 1905 a marqué un tournant."]
+
+[[rule]]
+id = "virage-inspirant"
+family = "ampleur"
+severity = "block"
+pattern = '''\bpour l['’]humanité\b|\bce que cela (?:signifie|dit) (?:vraiment )?(?:pour|de) (?:nous|l['’]humanité|notre avenir|notre époque)\b|\bchanger le monde\b|\bau-del[àa] de la (?:technologie|technique),? (?:c['’]est|il s['’]agit)\b|\ben fin de compte,? il s['’]agit\b|\bl['’]avenir nous (?:le )?dira\b|\bune question de (?:sens|civilisation)\b'''
+message = "Le texte quitte son sujet concret pour une morale générale."
+fix = "Terminer sur le concret."
+bad = ["Au-delà de la technologie, c'est une question de sens.", "L'avenir nous le dira."]
+good = ["L'avenir de l'entreprise dépend du contrat signé en mars."]
+
+[[rule]]
+id = "autorite-vague"
+family = "source"
+severity = "warn"
+escalate_at = 2
+pattern = '''\bles experts\s+(?:affirment|disent|s['’]accordent|estiment|recommandent)\b|\b(?:des|de nombreuses|plusieurs|certaines|les) études\s+(?:montrent|prouvent|démontrent|suggèrent|révèlent)\b|\bil est (?:prouvé|scientifiquement prouvé) que\b|\btout le monde sait\b|\bselon (?:certains|beaucoup|de nombreux experts|les spécialistes)\b|\bla plupart des (?:experts|spécialistes|professionnels) s['’]accordent\b'''
+message = "Source invoquée sans être nommée."
+fix = "Nommer la source (auteur, année), assumer l'idée (« je pense »), ou couper."
+bad = ["Des études montrent que le télétravail augmente la productivité.\n\nLes experts s'accordent sur ce point."]
+good = ["Une étude de l'Insee (2023) montre une hausse de 4 %."]
+
+# ---------------------------------------------------------------- mise en forme
+
+[[rule]]
+id = "puces-gras-serie"
+family = "mise-en-forme"
+check = "bold_bullets"
+severity = "warn"
+params = { warn_at = 3, block_at = 5 }
+message = "Série de puces « **Mot** : explication », gabarit de générateur."
+fix = "Rédiger en phrases, ou garder des puces sans gras qui donnent chacune un fait."
+bad = ["- **Vitesse** : rapide.\n- **Prix** : bas.\n- **Support** : 24/7.", "- **Vitesse :** rapide.\n- **Prix :** bas.\n- **Support :** 24/7."]
+good = ["- Vitesse : 2 s.\n- Prix : 9 €.\n- Support : 24/7.", "- **Vitesse** : 2 s.\n- **Prix** : 9 €."]
+
+[[rule]]
+id = "emoji-tete"
+family = "mise-en-forme"
+check = "emoji_lead"
+severity = "warn"
+params = { block_at = 2 }
+message = "Émoji en tête de ligne, de puce ou d'intertitre : mise en page de post généré."
+fix = "Retirer l'émoji. Si la liste a besoin de repères, un mot ou un chiffre suffit."
+bad = ["🚀 Nous recrutons à Bordeaux !\n\n✅ CDI\n\n💡 Télétravail possible"]
+good = ["Nous recrutons à Bordeaux 🚀", "Le prix passe à 9 €.", "★★★★★ Super soirée."]
+
+# ---------------------------------------------------------------- réseaux sociaux
+
+[[rule]]
+id = "hashtags"
+family = "reseau-social"
+severity = "block"
+pattern = '''(?:^|\s)#[A-Za-zÀ-ÿ][\wÀ-ÿ]+(?:[ \t,]+#[A-Za-zÀ-ÿ][\wÀ-ÿ]+)+'''
+message = "Bloc de hashtags, signature d'un post généré pour LinkedIn ou X."
+fix = "Les retirer. Si la plateforme en demande, un ou deux, choisis à la main."
+bad = ["Merci à toute l'équipe. #Tech #Paris #Innovation", "#Recrutement #Backend"]
+good = ["Le canal #général est archivé.", "Voir l'issue #42."]
+
+[[rule]]
+id = "rituel-reseau"
+family = "reseau-social"
+severity = "warn"
+escalate_at = 2
+pattern = '''\b(?:(?:lien|la suite|détails?|infos?) (?:en|dans le|dans les) (?:premier )?commentaires?\b|(?:partagez|repartagez|likez|commentez) (?:ce post|cette publication|autour de vous)|n['’]hésitez pas à (?:liker|commenter|partager|repartager|me suivre|nous suivre|vous abonner)\b|abonnez-vous (?:à (?:ma|notre|la) (?:newsletter|chaîne|page)|pour (?:ne rien|suivre|recevoir))|suivez-moi pour\b|installez-vous confortablement\b|c['’]est parti\s*!|plot twist\b|cerise sur le gâteau\b)|♻️|👇|👉|^\W{0,3}(?:→|⇒|➜|➔|➤)\s*\S'''
+message = "Rituel de réseau social : appel au partage, teasing, flèche ou index pointé."
+fix = "Retirer. Le lien se pose directement, la conclusion se donne sans annonce."
+bad = ["La suite en commentaire.", "N'hésitez pas à partager autour de vous !", "👉 Le lien est ici.", "→ La technologie évolue vite."]
+good = ["Réglages → Général → Fuseau horaire.", "Abonnez-vous aux événements du webhook."]
+
+[[rule]]
+id = "calque-anglais"
+family = "vocabulaire"
+severity = "warn"
+escalate_at = 3
+pattern = '''\badresser (?:un|le|ce|les|des|ces) (?:problèmes?|enjeux|enjeu|sujets?|défis?)\b|\bdélivrer (?:de la |une |plus de )?valeur\b|\bfaire sens\b|\bdrastiquement\b|\b(?:game[- ]?changer|must[- ]have|no[- ]brainer|next level|deep dive|mindset|insights?)\b'''
+message = "Calque de l'anglais."
+fix = "Aborder un problème, apporter de la valeur, avoir du sens, radicalement."
+bad = ["Il faut adresser ce problème.\n\nCela fait sens.\n\nUn vrai game changer."]
+good = ["Il faut aborder ce problème."]
+
+[[rule]]
+id = "titre-conclusion"
+family = "titre"
+scope = "title"
+kinds = ["heading"]
+severity = "warn"
+pattern = '''^\W*(?:Conclusion|En conclusion|Pour conclure|En résumé|En bref|Le mot de la fin|Pour résumer)\s*:?\s*$'''
+message = "Intertitre « Conclusion » ou « En résumé » : plan d'article généré."
+fix = "Supprimer l'intertitre et finir sur la dernière idée, ou titrer par le contenu."
+bad = ["## En résumé", "## Conclusion"]
+good = ["## Conclusion du contrat de bail"]
+
+[[rule]]
+id = "formule-toute-faite"
+family = "rituel"
+severity = "block"
+pattern = '''\bne remplacera pas (?:les|le|la) [^.!?]{1,30}, mais (?:les|le|la|ceux|celles)\b|\ble moment est venu (?:de|d['’])|\bfaire de (?:cette|ce|cet|ces) [^.!?]{1,25} une réalité\b|\bouvr(?:e|ent|ir|ant) (?:la voie à )?de nouvelles perspectives\b|\ben faire (?:un|une|des|de véritables?|un véritable) (?:alliés?|atouts?|leviers?|forces?|opportunités?)\b|\btransform(?:er|ez|e|ent|ons|ant) [^.!?]{1,50} en (?:un |une |de véritables? |un véritable )?(?:atouts?|opportunités?|leviers?|avantages? concurrentiels?|forces?)\b|\bpasser d['’]une logique de [^.!?]{1,40} à une logique de\b'''
+message = "Formule toute faite de conclusion ou de retournement."
+fix = "Dire le résultat concret : qui fait quoi, avec quel effet mesuré."
+bad = ["L'IA ne remplacera pas les comptables, mais les comptables qui maîtrisent l'IA remplaceront les autres.", "Vous transformez une contrainte potentielle en un atout de pilotage.", "Le moment est venu d'apprivoiser ces outils."]
+good = ["Il a transformé le garage en atelier.", "Le contrat ouvre droit à une indemnité."]
+
+[[rule]]
+id = "cliche-sensoriel"
+family = "rituel"
+severity = "block"
+pattern = '''\b(?:voyage|expérience|explosion|aventure) (?:sensoriel(?:le)?|gustati(?:f|ve)|aromatique)\b|\blaissez-vous (?:envoûter|séduire|transporter|tenter|surprendre|emporter|charmer)\b|\binvitation au voyage\b|\brévèle(?:r|nt)? tout (?:son|leur) potentiel\b'''
+message = "Cliché de fiche produit."
+fix = "Décrire le produit : origine, goût précis, usage."
+bad = ["Un voyage sensoriel au berceau du café.", "Laissez-vous envoûter par des arômes de jasmin."]
+good = ["Notes de jasmin et de bergamote, acidité vive."]
+
+[[rule]]
+id = "et-vous"
+family = "mise-en-scene"
+scope = "first_sentence"
+kinds = ["paragraph"]
+severity = "warn"
+flags = ""
+pattern = '''^\W*Et vous, [^?]{0,80}\?'''
+message = "Question d'engagement « Et vous, ... ? » en fin de post."
+fix = "Poser une question précise à laquelle le lecteur peut répondre, ou finir sur le fait."
+bad = ["Et vous, utilisez-vous déjà l'IA ?"]
+good = ["Et vous avez signé quand ?"]
+
+[[rule]]
+id = "resultat-deux-points"
+family = "mise-en-scene"
+scope = "sentence"
+kinds = ["paragraph", "list"]
+severity = "warn"
+escalate_at = 2
+flags = ""
+pattern = '''^\W*(?:Résultat|Conséquence|Le verdict|Bilan|Le constat)\s*:'''
+message = "« Résultat : » en tête de phrase, une chute mise en scène."
+fix = "Écrire la phrase complète : « Les heures de saisie diminuent de moitié »."
+bad = ["Résultat : les heures de saisie diminuent.", "Les éditeurs exploitent ces informations. Résultat : moins de temps perdu."]
+good = ["Le résultat net atteint 2 M€.", "Le bilan : voir l'annexe 2."]
+
+[[rule]]
+id = "annonce-reseau-social"
+family = "rituel"
+severity = "block"
+pattern = '''\b(?:nous sommes|je suis|on est) (?:très |tellement |super )?(?:ravie?s?|fière?s?|fiers|heureux|heureuses?|enchantée?s?) d['’](?:annoncer|accueillir|vous (?:annoncer|présenter|partager))\b|\bce n['’]est que le (?:début|commencement)\b|\bplus (?:motivée?s?|déterminée?s?|engagée?s?) que jamais\b|\brelever les (?:nombreux |prochains )?défis qui nous attendent\b|\b(?:étape|cap) (?:majeure|importante|clé|décisive) (?:dans|de) (?:notre|cette|mon|son|leur) (?:aventure|histoire|parcours|croissance|développement)\b|\bun immense merci\b|\brejoindre l['’]aventure\b|\b(?:réinventer|construire|façonner|inventer) (?:la|le|les) [\wÀ-ÿ]+ de demain\b'''
+message = "Formule d'annonce de réseau social, interchangeable d'une entreprise à l'autre."
+fix = "Donner le fait : montant, investisseurs, usage des fonds, date. « On a levé 2 M€ auprès de X pour ouvrir Lyon en mars. »"
+bad = ["Nous sommes ravis d'annoncer notre levée de fonds !", "Ce n'est que le début !", "Nous sommes plus motivés que jamais.", "Cette levée marque une étape majeure dans notre aventure.", "Vous souhaitez rejoindre l'aventure ?", "Nous continuons à réinventer la logistique de demain."]
+good = ["Il est ravi de son achat.", "Le film commence au début de l'été.", "Rendez-vous demain à 9 h."]

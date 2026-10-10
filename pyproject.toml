@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "slopcheck-fr"
+version = "0.2.0"
+description = "Repère les tics d'écriture IA dans un texte français et propose une correction pour chacun. Déterministe, hors ligne, sans dépendance."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE"]
+dependencies = []
+keywords = ["français", "french", "linter", "IA", "AI", "écriture", "slop", "claude", "chatgpt", "agent-skills"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: End Users/Desktop",
+    "Natural Language :: French",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Text Processing :: Linguistic",
+]
+
+[project.urls]
+Homepage = "https://github.com/tns-research/slopcheck-fr"
+Issues = "https://github.com/tns-research/slopcheck-fr/issues"
+Changelog = "https://github.com/tns-research/slopcheck-fr/blob/main/CHANGELOG.md"
+
+[project.scripts]
+slopcheck = "slopcheck.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+slopcheck = ["packs/*.toml"]

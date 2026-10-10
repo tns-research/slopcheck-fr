@@ -1,0 +1,1 @@
+Un week-end en famille parfait ! Chambres propres et spacieuses, vue magnifique sur la mer et personnel très accueillant et attentif. Les enfants ont adoré la piscine et la plage à deux pas, et nous avons beaucoup apprécié le petit-déjeuner, copieux et varié. Un séjour reposant que nous recommandons à toutes les familles et que nous referons avec plaisir !

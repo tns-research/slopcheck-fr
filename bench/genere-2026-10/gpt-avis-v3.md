@@ -1,0 +1,1 @@
+Très déçu par mon expérience. Malgré une longue attente, la coupe a été ratée et ne correspondait pas du tout à ce que j’avais demandé. Je ne reviendrai pas.

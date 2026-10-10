@@ -1,0 +1,1 @@
+Très déçu de ma visite. J'avais pris rendez-vous, mais j'ai attendu plus de quarante minutes avant d'être installé, sans aucune excuse ni information. Le résultat n'est pas à la hauteur : la coupe est irrégulière et ne correspond pas à ce que j'avais demandé. Je reviendrai probablement ailleurs.

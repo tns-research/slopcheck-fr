@@ -1,0 +1,23 @@
+name: Faux positif
+description: slopcheck relève une phrase écrite par un humain, ou une tournure légitime.
+labels: ["faux positif"]
+body:
+  - type: textarea
+    id: extrait
+    attributes:
+      label: Extrait relevé
+      description: La phrase et la ligne de sortie de slopcheck.
+      render: text
+    validations:
+      required: true
+  - type: input
+    id: regle
+    attributes:
+      label: Règle
+      placeholder: "contraste-appose"
+    validations:
+      required: true
+  - type: textarea
+    id: pourquoi
+    attributes:
+      label: Pourquoi la tournure est légitime ici

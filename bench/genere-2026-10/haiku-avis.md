@@ -1,0 +1,1 @@
+Excellent restaurant italien ! Nous y avons passé une très bonne soirée hier. Les pâtes étaient fraîches et bien cuisinées, la sauce avait du goût sans être lourde, et le service était agréable et attentif. Nous recommandons, et nous reviendrons avec plaisir.
